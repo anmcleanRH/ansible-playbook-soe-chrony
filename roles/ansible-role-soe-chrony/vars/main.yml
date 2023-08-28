@@ -1,0 +1,5 @@
+---
+# vars file for ansible-role-chrony
+ntp_server_name1:
+ntp_server_name2:
+ntp_server_name3:

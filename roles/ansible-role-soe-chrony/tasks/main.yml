@@ -1,0 +1,31 @@
+---
+# tasks file for ansible-role-chrony
+
+- name: Make sure chronyd is installed
+  ansible.builtin.dnf:
+    name: chrony
+    state: latest
+    update_cache: true
+
+- name: Deploy chrony.conf template
+  ansible.builtin.template:
+    src: "../templates/chrony.conf.j2"
+    dest: "/etc/chrony.conf"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
+    force: true
+  register: _template
+
+- name: Set Timezone to UTC
+  become: true
+  command: timedatectl set-timezone UTC
+  when: ansible_date_time.tz != 'UTC'
+  register: _timezonechange
+
+- name: Restart chronyd
+  ansible.builtin.service:
+    name: chronyd
+    state: restarted
+  when: _template or _timezonechange is changed

@@ -1,0 +1,30 @@
+## NTP servers to be used
+server {{ ntp_server_name1 }} iburst
+server {{ ntp_server_name2 }} iburst
+## if needing a third uncomment below line
+#server {{ ntp_server_name3 }} iburst
+
+## Use NTP servers from DHCP
+sourcedir /run/chrony-dhcp 
+
+## Record the rate at which the system clock gains/loses time
+driftfile /var/lib/chrony/drift 
+
+## Allow the system clock to be stepped in the first three updates
+## if its offset is larger than 1 second
+makestep 1.0 3
+
+## Enable kernel sync of the real-time clock (RTC)
+rtcsync
+
+## Specify file containing keys for NTP authentication
+keyfile /etc/chrony.keys
+
+## Save NTS keys and cookies
+ntsdumpdir /var/lib/chrony
+
+## Get TAI-UTC offset and leap seconds from the system tz database
+leapsectz right/UTC
+
+## Specify directory for log files
+logdir /var/log/chrony
